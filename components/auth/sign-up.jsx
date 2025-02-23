@@ -157,10 +157,11 @@ export default function SignUp() {
       <div className="relative hidden w-0 flex-1 lg:block">
         <Image
           className="absolute inset-0 h-full w-full object-cover"
-          src="/placeholder.svg?height=1080&width=1920"
+          src="/billy.jpg"
           alt="Finance"
           width={1920}
           height={1080}
+          style={{objectFit:"contain"}}
           priority
         />
       </div>
