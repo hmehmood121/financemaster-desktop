@@ -92,8 +92,8 @@ export default function ArticlesPage() {
               </CardHeader>
               <CardContent className="p-4">
                 <CardTitle className="line-clamp-2">{article.title}</CardTitle>
-                {article.excerpt && (
-                  <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{article.excerpt}</p>
+                {article.content && (
+                  <p className="mt-2 line-clamp-3 text-sm text-muted-foreground" >{article.content}</p>
                 )}
               </CardContent>
               <CardFooter className="p-4 pt-0">

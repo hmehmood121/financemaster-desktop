@@ -32,7 +32,7 @@ export function TipOfTheDay() {
       </CardHeader>
       <CardContent>
         <h3 className="mb-2 text-lg font-semibold text-white">{tip.title}</h3>
-        <p className="text-white/90">{tip.details}</p>
+        <p className="text-white/90">{tip.content}</p>
       </CardContent>
     </Card>
   )
