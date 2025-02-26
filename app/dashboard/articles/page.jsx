@@ -93,7 +93,7 @@ export default function ArticlesPage() {
               <CardContent className="p-4">
                 <CardTitle className="line-clamp-2">{article.title}</CardTitle>
                 {article.content && (
-                  <p className="mt-2 line-clamp-3 text-sm text-muted-foreground" >{article.content}</p>
+                  <div  dangerouslySetInnerHTML={{ __html: article.content }} className="mt-2 line-clamp-3 text-sm text-muted-foreground" ></div>
                 )}
               </CardContent>
               <CardFooter className="p-4 pt-0">

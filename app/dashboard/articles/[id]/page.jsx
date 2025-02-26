@@ -94,7 +94,7 @@ export default function ArticlePage({ params }) {
             </div>
           </CardHeader>
           <CardContent className="p-6 space-y-4">
-            <h1 className="text-3xl font-bold">{article.title}</h1>
+            <h2 className="text-xl font-bold">{article.title}</h2>
             <div className="prose prose-gray max-w-none"
              dangerouslySetInnerHTML={{ __html: article.content }}
             ></div>
