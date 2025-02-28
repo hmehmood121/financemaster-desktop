@@ -296,10 +296,10 @@ export default function ReelPage({ params }) {
       </div>
 
       <div className="container mx-auto px-4 py-6">
-        <Button variant="ghost" className="group mb-4 text-white" onClick={() => router.back()}>
+        {/* <Button variant="ghost" className="group mb-4 text-white" onClick={() => router.back()}>
           <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back
-        </Button>
+        </Button> */}
 
         <div className="grid gap-6 md:grid-cols-[1fr_400px]">
           {/* Video Section */}
