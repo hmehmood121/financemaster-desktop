@@ -97,7 +97,7 @@ export default function ArticlesPage() {
                 )}
               </CardContent>
               <CardFooter className="p-4 pt-0">
-                <Button variant="ghost" size="sm" className="w-full" asChild>
+                <Button size="sm" className="w-full" asChild>
                   <Link href={`/dashboard/articles/${article.id}`}>Read more</Link>
                 </Button>
               </CardFooter>
