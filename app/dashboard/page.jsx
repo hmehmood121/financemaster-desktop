@@ -30,7 +30,7 @@ export default function DashboardPage() {
   return (
     <main className="container mx-auto p-6">
       <div className="space-y-8">
-        <h1 className="text-3xl font-bold">Welcome, {user.displayName || "User"}!</h1>
+        <h1 className="text-3xl font-bold">Welcome, {user.displayName || ""}!</h1>
         <CourseList />
         <TipOfTheDay />
         <ArticleList />
