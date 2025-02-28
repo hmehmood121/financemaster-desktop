@@ -1,106 +1,384 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import Image from "next/image"
+import * as React from "react"
 import { useRouter } from "next/navigation"
-import { doc, getDoc } from "firebase/firestore"
-import { ArrowLeft } from "lucide-react"
+import Image from "next/image"
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, Timestamp } from "firebase/firestore"
+import {
+  ArrowLeft,
+  Heart,
+  MessageCircle,
+  Share2,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Link2,
+  Send,
+  MoreVertical,
+} from "lucide-react"
 
 import { db } from "@/lib/firebase"
+import { useAuth } from "@/components/providers/auth-provider"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { toast } from "sonner"
 
-export default function ArticlePage({ params }) {
-  const [article, setArticle] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+export default function ReelPage({ params }) {
+  const { user } = useAuth()
   const router = useRouter()
+  const [reel, setReel] = React.useState(null)
+  const [loading, setLoading] = React.useState(true)
+  const [isCommentsOpen, setIsCommentsOpen] = React.useState(false)
+  const [hasLiked, setHasLiked] = React.useState(false)
+  const [newComment, setNewComment] = React.useState("")
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [editingComment, setEditingComment] = React.useState(null)
+  const [editedText, setEditedText] = React.useState("")
 
-  useEffect(() => {
-    async function fetchArticle() {
+  React.useEffect(() => {
+    async function fetchReel() {
       try {
-        const docRef = doc(db, "articles", params.id)
+        const docRef = doc(db, "reels", params.id)
         const docSnap = await getDoc(docRef)
 
         if (docSnap.exists()) {
-          setArticle({ id: docSnap.id, ...docSnap.data() })
-        } else {
-          setError("Article not found")
+          const reelData = {
+            id: docSnap.id,
+            ...docSnap.data(),
+            likes: docSnap.data().likes || [],
+            comments: docSnap.data().comments || [],
+          }
+          setReel(reelData)
+          setHasLiked(reelData.likes.includes(user?.uid))
         }
       } catch (error) {
-        setError(error.message)
+        console.error("Error fetching reel:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchArticle()
-  }, [params.id])
+    if (user) {
+      fetchReel()
+    }
+  }, [params.id, user])
+
+  const handleLike = async () => {
+    if (!user) return
+
+    try {
+      const reelRef = doc(db, "reels", params.id)
+      if (hasLiked) {
+        await updateDoc(reelRef, {
+          likes: arrayRemove(user.uid),
+        })
+        setReel((prev) => ({
+          ...prev,
+          likes: prev.likes.filter((id) => id !== user.uid),
+        }))
+      } else {
+        await updateDoc(reelRef, {
+          likes: arrayUnion(user.uid),
+        })
+        setReel((prev) => ({
+          ...prev,
+          likes: [...prev.likes, user.uid],
+        }))
+      }
+      setHasLiked(!hasLiked)
+    } catch (error) {
+      console.error("Error updating like:", error)
+      toast.error("Failed to update like")
+    }
+  }
+
+  const handleComment = async (e) => {
+    e.preventDefault()
+    if (!user || !newComment.trim()) return
+
+    setIsSubmitting(true)
+    try {
+      const reelRef = doc(db, "reels", params.id)
+      const newCommentObj = {
+        id: crypto.randomUUID(),
+        text: newComment.trim(),
+        userId: user.uid,
+        userName: user.displayName,
+        userPhoto: user.photoURL,
+        timestamp: Timestamp.now().toDate().toISOString(),
+      }
+
+      await updateDoc(reelRef, {
+        comments: arrayUnion(newCommentObj),
+      })
+
+      setReel((prev) => ({
+        ...prev,
+        comments: [...prev.comments, newCommentObj],
+      }))
+      setNewComment("")
+      toast.success("Comment added successfully")
+    } catch (error) {
+      console.error("Error adding comment:", error)
+      toast.error("Failed to add comment")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleEditComment = async (e) => {
+    e.preventDefault()
+    if (!editedText.trim()) return
+
+    try {
+      const updatedComments = reel.comments.map((comment) =>
+        comment.id === editingComment.id ? { ...comment, text: editedText.trim() } : comment,
+      )
+
+      await updateDoc(doc(db, "reels", params.id), {
+        comments: updatedComments,
+      })
+
+      setReel((prev) => ({
+        ...prev,
+        comments: updatedComments,
+      }))
+      setEditingComment(null)
+      setEditedText("")
+      toast.success("Comment updated successfully")
+    } catch (error) {
+      console.error("Error updating comment:", error)
+      toast.error("Failed to update comment")
+    }
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const updatedComments = reel.comments.filter((comment) => comment.id !== commentId)
+
+      await updateDoc(doc(db, "reels", params.id), {
+        comments: updatedComments,
+      })
+
+      setReel((prev) => ({
+        ...prev,
+        comments: updatedComments,
+      }))
+      toast.success("Comment deleted successfully")
+    } catch (error) {
+      console.error("Error deleting comment:", error)
+      toast.error("Failed to delete comment")
+    }
+  }
+
+  const handleShare = (platform) => {
+    const url = window.location.href
+    const text = reel?.caption || "Check out this reel!"
+
+    const shareUrls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    }
+
+    if (platform === "copy") {
+      navigator.clipboard.writeText(url)
+      toast.success("Link copied to clipboard!")
+      return
+    }
+
+    window.open(shareUrls[platform], "_blank")
+  }
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-4xl p-6">
-        <div className="space-y-6">
-          <div className="h-8 w-32 animate-pulse rounded bg-muted" />
-          <Card>
-            <CardHeader className="p-0">
-              <div className="aspect-video w-full animate-pulse bg-muted" />
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
-              <div className="h-8 w-3/4 animate-pulse rounded bg-muted" />
-              <div className="space-y-2">
-                <div className="h-4 w-full animate-pulse rounded bg-muted" />
-                <div className="h-4 w-full animate-pulse rounded bg-muted" />
-                <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
-              </div>
-            </CardContent>
-          </Card>
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    )
+  }
+
+  if (!reel) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Reel not found</h1>
+          <Button onClick={() => router.push("/dashboard/reels")} className="mt-4">
+            Back to Reels
+          </Button>
         </div>
       </div>
     )
   }
 
-  if (error || !article) {
-    return (
-      <div className="container mx-auto max-w-4xl p-6">
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center p-6 min-h-[400px] space-y-4">
-            <h1 className="text-2xl font-bold text-muted-foreground">{error || "Article not found"}</h1>
-            <Button onClick={() => router.push("/dashboard")}>Return to Dashboard</Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   return (
-    <div className="container mx-auto max-w-4xl p-6">
-      <div className="space-y-6">
-        <Button variant="ghost" className="group" onClick={() => router.back()}>
+    <div className="min-h-screen bg-black">
+      <div className="container mx-auto px-4 py-6">
+        <Button variant="ghost" className="group mb-4 text-white" onClick={() => router.back()}>
           <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back
         </Button>
 
-        <Card>
-          <CardHeader className="p-0">
-            <div className="aspect-video relative w-full">
-              <Image
-                src={article.image || "/placeholder.svg?height=600&width=1200"}
-                alt={article.title}
-                fill
-                className="object-cover"
-                priority
-              />
+        <div className="grid gap-6 md:grid-cols-[1fr_400px]">
+          {/* Video Section */}
+          <div className="relative aspect-[9/16] md:aspect-video">
+            <video src={reel.videoURL} className="h-full w-full rounded-lg object-contain" controls autoPlay loop />
+          </div>
+
+          {/* Info Section */}
+          <div className="space-y-6 text-white">
+            <div className="flex items-start gap-4">
+              <div className="relative h-12 w-12 flex-shrink-0">
+                <Image
+                  src={reel.userPhoto || "/placeholder.svg"}
+                  alt={reel.userName}
+                  fill
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <h2 className="font-semibold">{reel.userName}</h2>
+                <p className="text-sm text-gray-400">{new Date(reel.timestamp).toLocaleDateString()}</p>
+              </div>
             </div>
-          </CardHeader>
-          <CardContent className="p-6 space-y-4">
-            <h2 className="text-xl font-bold">{article.title}</h2>
-            <div className="prose prose-gray max-w-none"
-             dangerouslySetInnerHTML={{ __html: article.content }}
-            ></div>
-          </CardContent>
-        </Card>
+
+            <p className="text-lg">{reel.caption}</p>
+
+            <div className="flex items-center gap-6">
+              <button onClick={handleLike} className="flex items-center gap-2">
+                <Heart
+                  className={`h-6 w-6 transition-colors ${hasLiked ? "fill-red-500 text-red-500" : "text-white"}`}
+                />
+                <span>{reel.likes.length}</span>
+              </button>
+
+              <button onClick={() => setIsCommentsOpen(true)} className="flex items-center gap-2">
+                <MessageCircle className="h-6 w-6" />
+                <span>{reel.comments.length}</span>
+              </button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2">
+                    <Share2 className="h-6 w-6" />
+                    <span>Share</span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleShare("facebook")}>
+                    <Facebook className="mr-2 h-4 w-4" />
+                    Facebook
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare("twitter")}>
+                    <Twitter className="mr-2 h-4 w-4" />
+                    Twitter
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare("linkedin")}>
+                    <Linkedin className="mr-2 h-4 w-4" />
+                    LinkedIn
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare("copy")}>
+                    <Link2 className="mr-2 h-4 w-4" />
+                    Copy link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <Dialog open={isCommentsOpen} onOpenChange={setIsCommentsOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Comments</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="max-h-[60vh]">
+            <div className="space-y-4">
+              {reel.comments.map((comment) => (
+                <div key={comment.id} className="flex gap-4">
+                  <div className="relative h-8 w-8 flex-shrink-0">
+                    <Image
+                      src={comment.userPhoto || "/placeholder.svg"}
+                      alt={comment.userName}
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{comment.userName}</p>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(comment.timestamp).toLocaleDateString()}
+                      </span>
+                      {comment.userId === user?.uid && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto">
+                              <MoreVertical className="h-4 w-4" />
+                              <span className="sr-only">More options</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setEditingComment(comment)
+                                setEditedText(comment.text)
+                              }}
+                            >
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteComment(comment.id)}>
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
+                    {editingComment?.id === comment.id ? (
+                      <form onSubmit={handleEditComment} className="mt-2 flex gap-2">
+                        <Input value={editedText} onChange={(e) => setEditedText(e.target.value)} className="flex-1" />
+                        <Button type="submit" size="sm">
+                          Save
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditingComment(null)
+                            setEditedText("")
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </form>
+                    ) : (
+                      <p className="text-sm">{comment.text}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {reel.comments.length === 0 && <p className="text-center text-muted-foreground">No comments yet</p>}
+            </div>
+          </ScrollArea>
+          <form onSubmit={handleComment} className="flex gap-2 mt-4">
+            <Input
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              disabled={isSubmitting}
+            />
+            <Button type="submit" size="icon" disabled={isSubmitting || !newComment.trim()}>
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Send comment</span>
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
