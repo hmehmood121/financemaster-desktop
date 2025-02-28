@@ -21,6 +21,12 @@ export default function SignUp() {
   const [password, setPassword] = React.useState("")
   const [profilePicture, setProfilePicture] = React.useState(null)
   const [previewUrl, setPreviewUrl] = React.useState("")
+  const [socialLinks, setSocialLinks] = React.useState({
+    instagram: "",
+    facebook: "",
+    tiktok: "",
+    youtube: "",
+  })
   const router = useRouter()
 
   const handleImageChange = (e) => {
@@ -29,6 +35,13 @@ export default function SignUp() {
       setProfilePicture(file)
       setPreviewUrl(URL.createObjectURL(file))
     }
+  }
+
+  const handleSocialLinkChange = (platform) => (e) => {
+    setSocialLinks((prev) => ({
+      ...prev,
+      [platform]: e.target.value,
+    }))
   }
 
   const handleSignUp = async (e) => {
@@ -54,11 +67,12 @@ export default function SignUp() {
         photoURL: photoURL,
       })
 
-      // Create user document
+      // Create user document with social links
       await setDoc(doc(db, "users", user.uid), {
         name,
         email,
         photoURL,
+        socialLinks,
         createdAt: new Date().toISOString(),
       })
 
@@ -146,6 +160,54 @@ export default function SignUp() {
                   className="mt-2"
                 />
               </div>
+              <div>
+                <Label htmlFor="instagram">Instagram Profile Link</Label>
+                <Input
+                  id="instagram"
+                  type="url"
+                  value={socialLinks.instagram}
+                  onChange={handleSocialLinkChange("instagram")}
+                  required
+                  placeholder="https://instagram.com/username"
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="facebook">Facebook Profile Link</Label>
+                <Input
+                  id="facebook"
+                  type="url"
+                  value={socialLinks.facebook}
+                  onChange={handleSocialLinkChange("facebook")}
+                  required
+                  placeholder="https://facebook.com/username"
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="tiktok">TikTok Profile Link</Label>
+                <Input
+                  id="tiktok"
+                  type="url"
+                  value={socialLinks.tiktok}
+                  onChange={handleSocialLinkChange("tiktok")}
+                  required
+                  placeholder="https://tiktok.com/@username"
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="youtube">YouTube Channel Link</Label>
+                <Input
+                  id="youtube"
+                  type="url"
+                  value={socialLinks.youtube}
+                  onChange={handleSocialLinkChange("youtube")}
+                  required
+                  placeholder="https://youtube.com/@username"
+                  className="mt-2"
+                />
+              </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Create account
@@ -157,11 +219,10 @@ export default function SignUp() {
       <div className="relative hidden w-0 flex-1 lg:block">
         <Image
           className="absolute inset-0 h-full w-full object-cover"
-          src="/billy.jpg"
+          src="/placeholder.svg?height=1080&width=1920"
           alt="Finance"
           width={1920}
           height={1080}
-          style={{objectFit:"contain"}}
           priority
         />
       </div>

@@ -150,7 +150,7 @@ export default function ShopPage() {
               </div>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium line-clamp-1">{product.name}</h3>
+                  <h3 className="mt-4 font-medium line-clamp-1">{product.name}</h3>
                   <ExternalLink className="h-4 w-4 text-muted-foreground" />
                 </div>
                 {product.price && <p className="mt-2 text-sm text-muted-foreground">${product.price}</p>}

@@ -1,90 +1,75 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
+import Link from "next/link"
 import { collection, getDocs } from "firebase/firestore"
-import { ChevronUp, ChevronDown } from "lucide-react"
+import { Play } from "lucide-react"
 
 import { db } from "@/lib/firebase"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Card } from "@/components/ui/card"
 
 export default function ReelsPage() {
   const [reels, setReels] = React.useState([])
-  const [currentIndex, setCurrentIndex] = React.useState(0)
-  const videoRef = React.useRef(null)
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     async function fetchReels() {
-      const querySnapshot = await getDocs(collection(db, "reels"))
-      const fetchedReels = []
+      try {
+        const querySnapshot = await getDocs(collection(db, "reels"))
+        const fetchedReels = []
 
-      querySnapshot.forEach((doc) => {
-        fetchedReels.push({ id: doc.id, ...doc.data() })
-      })
+        querySnapshot.forEach((doc) => {
+          fetchedReels.push({ id: doc.id, ...doc.data() })
+        })
 
-      setReels(fetchedReels)
+        setReels(fetchedReels)
+      } catch (error) {
+        console.error("Error fetching reels:", error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchReels()
   }, [])
 
-  const handleNext = () => {
-    if (currentIndex < reels.length - 1) {
-      setCurrentIndex((prev) => prev + 1)
-    }
-  }
-
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1)
-    }
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <Card key={i} className="aspect-[9/16] animate-pulse bg-muted" />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="flex h-[calc(100vh-2rem)] items-center justify-center">
-      <div className="relative mx-auto aspect-[9/16] h-full max-h-[85vh]">
-      {reels
-  .filter((reel) => reel.status === "Public") // Filter only public reels
-  .length > 0 && (
-    <>
-      <video
-        ref={videoRef}
-        src={reels.filter((reel) => reel.status === "Public")[currentIndex].videoURL}
-        className="h-full w-full rounded-xl object-cover"
-        controls
-        autoPlay
-        loop
-      />
-      <div className="absolute right-4 top-1/2 flex -translate-y-1/2 flex-col gap-4">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={handlePrevious}
-          disabled={currentIndex === 0}
-          className={cn(
-            "h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm",
-            currentIndex === 0 && "opacity-50"
-          )}
-        >
-          <ChevronUp className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={handleNext}
-          disabled={currentIndex === reels.filter((reel) => reel.status === "Public").length - 1}
-          className={cn(
-            "h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm",
-            currentIndex === reels.filter((reel) => reel.status === "Public").length - 1 &&
-              "opacity-50"
-          )}
-        >
-          <ChevronDown className="h-4 w-4" />
-        </Button>
-      </div>
-    </>
-  )}
-
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Reels</h1>
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {reels
+          .filter((reel) => reel.status === "Public")
+          .map((reel) => (
+            <Link key={reel.id} href={`/dashboard/reels/${reel.id}`}>
+              <Card className="aspect-[9/16] group relative overflow-hidden">
+                <Image
+                  src={reel.thumbnailURL || "/placeholder.svg?height=600&width=400"}
+                  alt={reel.caption}
+                  fill
+                  className="object-cover transition-transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Play className="w-12 h-12 text-white" />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                  {/* <p className="text-white line-clamp-2 text-sm">{reel.caption}</p> */}
+                </div>
+              </Card>
+            </Link>
+          ))}
       </div>
     </div>
   )

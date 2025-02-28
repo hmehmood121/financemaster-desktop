@@ -92,12 +92,12 @@ export default function ArticlesPage() {
               </CardHeader>
               <CardContent className="p-4">
                 <CardTitle className="line-clamp-2">{article.title}</CardTitle>
-                {article.content && (
-                  <div  dangerouslySetInnerHTML={{ __html: article.content }} className="mt-2 line-clamp-3 text-sm text-muted-foreground" ></div>
+                {article.excerpt && (
+                  <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{article.excerpt}</p>
                 )}
               </CardContent>
               <CardFooter className="p-4 pt-0">
-                <Button variant="ghost" size="sm" className="w-full" asChild>
+                <Button size="sm" className="w-full" asChild>
                   <Link href={`/dashboard/articles/${article.id}`}>Read more</Link>
                 </Button>
               </CardFooter>
