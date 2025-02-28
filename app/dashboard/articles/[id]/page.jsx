@@ -92,6 +92,8 @@ export default function ArticlePage({ params }) {
                 priority
               />
             </div>
+            <h3 className="italic">Author: {article.author}</h3>
+            <p className="italic">Published Date: {article.publishDate}</p>
           </CardHeader>
           <CardContent className="p-6 space-y-4">
             <h2 className="text-xl font-bold">{article.title}</h2>
