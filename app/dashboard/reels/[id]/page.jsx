@@ -310,7 +310,7 @@ export default function ReelPage({ params }) {
           {/* Info Section */}
           <div className="space-y-6 text-white">
             <div className="flex items-start gap-4">
-              <div className="relative h-12 w-12 flex-shrink-0">
+              {/* <div className="relative h-12 w-12 flex-shrink-0">
                 <Image
                   src={reel.userPhoto || "/placeholder.svg"}
                   alt={reel.userName}
@@ -321,7 +321,7 @@ export default function ReelPage({ params }) {
               <div className="flex-1">
                 <h2 className="font-semibold">{reel.userName}</h2>
                 <p className="text-sm text-gray-400">{new Date(reel.timestamp).toLocaleDateString()}</p>
-              </div>
+              </div> */}
             </div>
 
             <p className="text-lg">{reel.caption}</p>
