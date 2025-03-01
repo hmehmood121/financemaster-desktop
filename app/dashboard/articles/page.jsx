@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react"
 import { db } from "@/lib/firebase"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { generateSlug } from "@/lib/utils"
 
 export default function ArticlesPage() {
   const [articles, setArticles] = React.useState([])
@@ -21,7 +22,12 @@ export default function ArticlesPage() {
         const fetchedArticles = []
 
         querySnapshot.forEach((doc) => {
-          fetchedArticles.push({ id: doc.id, ...doc.data() })
+          const data = doc.data()
+          fetchedArticles.push({
+            id: doc.id,
+            ...data,
+            slug: data.slug || generateSlug(data.title), // Generate slug if not exists
+          })
         })
 
         setArticles(fetchedArticles)
@@ -96,9 +102,9 @@ export default function ArticlesPage() {
                   <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{article.excerpt}</p>
                 )}
               </CardContent>
-              <CardFooter className="p-4 pt-0">
+              <CardFooter className="p-4 pt-0 line-clamp-1">
                 <Button size="sm" className="w-full" asChild>
-                  <Link href={`/dashboard/articles/${article.id}`}>Read more</Link>
+                  <Link href={`/dashboard/articles/${article.slug}`}>Read more</Link>
                 </Button>
               </CardFooter>
             </Card>

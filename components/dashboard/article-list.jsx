@@ -9,6 +9,7 @@ import { ChevronRight } from "lucide-react"
 import { db } from "@/lib/firebase"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { generateSlug } from "@/lib/utils"
 
 export function ArticleList() {
   const [articles, setArticles] = React.useState([])
@@ -23,7 +24,12 @@ export function ArticleList() {
         const fetchedArticles = []
 
         querySnapshot.forEach((doc) => {
-          fetchedArticles.push({ id: doc.id, ...doc.data() })
+          const data = doc.data()
+          fetchedArticles.push({
+            id: doc.id,
+            ...data,
+            slug: data.slug || generateSlug(data.title), // Generate slug if not exists
+          })
         })
 
         setArticles(fetchedArticles)
@@ -102,7 +108,7 @@ export function ArticleList() {
             </CardContent>
             <CardFooter className="p-4 pt-0">
               <Button size="sm" className="w-full" asChild>
-                <Link href={`/dashboard/articles/${article.id}`}>Read more</Link>
+                <Link href={`/dashboard/articles/${article.slug}`}>Read more</Link>
               </Button>
             </CardFooter>
           </Card>

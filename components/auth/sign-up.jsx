@@ -167,7 +167,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.instagram}
                   onChange={handleSocialLinkChange("instagram")}
-                  required
                   placeholder="https://instagram.com/username"
                   className="mt-2"
                 />
@@ -179,7 +178,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.facebook}
                   onChange={handleSocialLinkChange("facebook")}
-                  required
                   placeholder="https://facebook.com/username"
                   className="mt-2"
                 />
@@ -191,7 +189,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.tiktok}
                   onChange={handleSocialLinkChange("tiktok")}
-                  required
                   placeholder="https://tiktok.com/@username"
                   className="mt-2"
                 />
@@ -203,7 +200,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.youtube}
                   onChange={handleSocialLinkChange("youtube")}
-                  required
                   placeholder="https://youtube.com/@username"
                   className="mt-2"
                 />
