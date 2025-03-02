@@ -78,15 +78,15 @@ export default function SignIn() {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <h2 className="text-xl font-semibold mb-4">Download our App</h2>
           <div className="flex flex-wrap gap-4 mb-8">
-            <Button onClick={() => window.location.href = "https://play.google.com/store/apps/details?id=com.finance.master"}  variant="outline" className="flex items-center gap-2">
+          <Button onClick={() => window.open("https://play.google.com/store/apps/details?id=com.finance.master", "_blank")}  variant="outline" className="flex items-center gap-2">
               <Smartphone className="h-4 w-4" />
               Download for Android
             </Button>
-            <Button onClick={() => window.location.href = "https://drive.google.com/file/d/114-sJfwYRgnZ2P3GG_vIhPrDpG7_4YA1/view?usp=sharing"} variant="outline" className="flex items-center gap-2">
+            <Button onClick={() => window.open("https://drive.google.com/file/d/114-sJfwYRgnZ2P3GG_vIhPrDpG7_4YA1/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
               <Laptop className="h-4 w-4" />
               Download for Windows
             </Button>
-            <Button onClick={() => window.location.href = "https://drive.google.com/file/d/1yDbGE5qGcBIDqhZM1Ugg8LBPpRVpS0H8/view?usp=sharing"} variant="outline" className="flex items-center gap-2">
+            <Button onClick={() => window.open("https://drive.google.com/file/d/1yDbGE5qGcBIDqhZM1Ugg8LBPpRVpS0H8/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
               <Apple className="h-4 w-4" />
               Download for Mac
             </Button>
