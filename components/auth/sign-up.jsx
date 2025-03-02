@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { doc, setDoc } from "firebase/firestore"
-import { Loader2, Upload } from "lucide-react"
+import { Loader2, Upload, Apple, Laptop, Smartphone } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -92,6 +92,20 @@ export default function SignUp() {
     <div className="flex min-h-screen">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
+          <div className="flex flex-wrap gap-4 mb-8">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Laptop className="h-4 w-4" />
+              Download for Windows
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Apple className="h-4 w-4" />
+              Download for Mac
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Smartphone className="h-4 w-4" />
+              Download for Android
+            </Button>
+          </div>
           <div className="space-y-6">
             <div>
               <h1 className="mt-8 text-2xl font-bold leading-9 tracking-tight">Create your account</h1>
@@ -167,6 +181,7 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.instagram}
                   onChange={handleSocialLinkChange("instagram")}
+                  required
                   placeholder="https://instagram.com/username"
                   className="mt-2"
                 />
@@ -178,6 +193,7 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.facebook}
                   onChange={handleSocialLinkChange("facebook")}
+                  required
                   placeholder="https://facebook.com/username"
                   className="mt-2"
                 />
@@ -189,6 +205,7 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.tiktok}
                   onChange={handleSocialLinkChange("tiktok")}
+                  required
                   placeholder="https://tiktok.com/@username"
                   className="mt-2"
                 />
@@ -200,6 +217,7 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.youtube}
                   onChange={handleSocialLinkChange("youtube")}
+                  required
                   placeholder="https://youtube.com/@username"
                   className="mt-2"
                 />

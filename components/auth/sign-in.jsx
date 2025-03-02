@@ -4,7 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from "firebase/auth"
-import { Loader2 } from "lucide-react"
+import { Loader2 } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { auth } from "@/lib/firebase"
 import { toast } from "sonner"
+import { Laptop, Apple, Smartphone } from 'lucide-react';
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = React.useState(false)
@@ -75,6 +76,21 @@ export default function SignIn() {
     <div className="flex min-h-screen">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
+          <h2 className="text-xl font-semibold mb-4">Download our App</h2>
+          <div className="flex flex-wrap gap-4 mb-8">
+            <Button onClick={() => window.location.href = ""} variant="outline" className="flex items-center gap-2">
+              <Laptop className="h-4 w-4" />
+              Download for Windows
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Apple className="h-4 w-4" />
+              Download for Mac
+            </Button>
+            <Button onClick={() => window.location.href = "https://play.google.com/store/apps/details?id=com.finance.master"}  variant="outline" className="flex items-center gap-2">
+              <Smartphone className="h-4 w-4" />
+              Download for Android
+            </Button>
+          </div>
           <div className="space-y-6">
             <div>
               <h1 className="mt-8 text-2xl font-bold leading-9 tracking-tight">Sign in to your account</h1>
@@ -165,11 +181,9 @@ export default function SignIn() {
           alt="Finance"
           width={1920}
           height={1080}
-          style={{objectFit:"contain"}}
           priority
         />
       </div>
     </div>
   )
 }
-
