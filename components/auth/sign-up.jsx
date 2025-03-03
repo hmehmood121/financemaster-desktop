@@ -72,7 +72,7 @@ export default function SignUp() {
         name,
         email,
         photoURL,
-        socialLinks,
+        socialLinks: Object.fromEntries(Object.entries(socialLinks).filter(([_, value]) => value.trim() !== "")),
         createdAt: new Date().toISOString(),
       })
 
@@ -93,17 +93,17 @@ export default function SignUp() {
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="flex flex-wrap gap-4 mb-8">
-          <Button onClick={() => window.open("https://play.google.com/store/apps/details?id=com.finance.master", "_blank")}  variant="outline" className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4" />
-              Download for Android
-            </Button>
-            <Button onClick={() => window.open("https://drive.google.com/file/d/114-sJfwYRgnZ2P3GG_vIhPrDpG7_4YA1/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2">
               <Laptop className="h-4 w-4" />
               Download for Windows
             </Button>
-            <Button onClick={() => window.open("https://drive.google.com/file/d/1yDbGE5qGcBIDqhZM1Ugg8LBPpRVpS0H8/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2">
               <Apple className="h-4 w-4" />
               Download for Mac
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Smartphone className="h-4 w-4" />
+              Download for Android
             </Button>
           </div>
           <div className="space-y-6">
@@ -181,7 +181,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.instagram}
                   onChange={handleSocialLinkChange("instagram")}
-                  required
                   placeholder="https://instagram.com/username"
                   className="mt-2"
                 />
@@ -193,7 +192,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.facebook}
                   onChange={handleSocialLinkChange("facebook")}
-                  required
                   placeholder="https://facebook.com/username"
                   className="mt-2"
                 />
@@ -205,7 +203,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.tiktok}
                   onChange={handleSocialLinkChange("tiktok")}
-                  required
                   placeholder="https://tiktok.com/@username"
                   className="mt-2"
                 />
@@ -217,7 +214,6 @@ export default function SignUp() {
                   type="url"
                   value={socialLinks.youtube}
                   onChange={handleSocialLinkChange("youtube")}
-                  required
                   placeholder="https://youtube.com/@username"
                   className="mt-2"
                 />
