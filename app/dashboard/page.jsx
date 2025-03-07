@@ -30,7 +30,13 @@ export default function DashboardPage() {
   return (
     <main className="container mx-auto p-6">
       <div className="space-y-8">
-        <h1 className="text-3xl font-bold">Welcome, {user.displayName || ""}!</h1>
+        <div className="text-center">
+      <h1 className="bg-[#ffb800] text-3xl py-2 font-bold">
+  <span className="text-black">Welcome,</span>  
+  <span className="text-black"> {user.displayName || ""}!</span>
+</h1>
+</div>
+
         <CourseList />
         <TipOfTheDay />
         <ArticleList />

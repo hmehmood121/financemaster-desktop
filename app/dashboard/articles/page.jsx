@@ -85,7 +85,7 @@ export default function ArticlesPage() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (
-            <Card key={article.id}>
+            <Card className="border-2 border-[#ffb800]" key={article.id}>
               <CardHeader className="p-0">
                 <div className="aspect-video relative">
                   <Image

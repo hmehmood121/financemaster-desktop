@@ -26,13 +26,13 @@ export function TipOfTheDay() {
   if (!tip) return null
 
   return (
-    <Card className="bg-gradient-to-r from-blue-500 to-purple-500">
+    <Card className="bg-gradient-to-r from-[#ffb800] to-[#fff]/80">
       <CardHeader>
-        <CardTitle className="text-white">Tip of the Day</CardTitle>
+        <CardTitle className="text-black">Tip of the Day</CardTitle>
       </CardHeader>
       <CardContent>
-        <h3 className="mb-2 text-lg font-semibold text-white">{tip.title}</h3>
-        <p className="text-white/90">{tip.content}</p>
+        <h3 className="mb-2 text-lg font-semibold text-black">{tip.title}</h3>
+        <p className="text-black">{tip.content}</p>
       </CardContent>
     </Card>
   )

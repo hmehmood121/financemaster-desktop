@@ -92,7 +92,7 @@ export function ArticleList() {
       </div>
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {articles.map((article) => (
-          <Card key={article.id}>
+          <Card className="border-[#ffb800] border-2" key={article.id}>
             <CardHeader className="p-0">
               <div className="aspect-video relative">
                 <Image

@@ -34,7 +34,7 @@ export function CourseList() {
       {courses
   .filter((course) => course.status === "Public") // Filter only public courses
   .map((course) => (
-    <Card key={course.id}>
+    <Card className="border-[#ffb800] border-2" key={course.id}>
       <CardHeader className="p-0">
         <div className="aspect-video relative">
           <Image
