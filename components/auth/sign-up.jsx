@@ -92,20 +92,25 @@ export default function SignUp() {
     <div className="flex min-h-screen">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="flex flex-wrap gap-4 mb-8">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Laptop className="h-4 w-4" />
-              Download for Windows
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Apple className="h-4 w-4" />
-              Download for Mac
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4" />
-              Download for Android
-            </Button>
-          </div>
+             <div className="flex flex-wrap gap-4 mb-8">
+                   <Button onClick={() => window.open("https://play.google.com/store/apps/details?id=com.finance.master", "_blank")}  variant="outline" className="flex items-center gap-2">
+                       <Smartphone className="h-4 w-4" />
+                       Download for Android
+                     </Button>
+                     <Button onClick={() => window.open("https://drive.google.com/file/d/114-sJfwYRgnZ2P3GG_vIhPrDpG7_4YA1/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
+                       <Laptop className="h-4 w-4" />
+                       Download for Windows
+                     </Button>
+                  
+                     <Button onClick={() => window.open("https://drive.google.com/file/d/1yDbGE5qGcBIDqhZM1Ugg8LBPpRVpS0H8/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
+                       <Apple className="h-4 w-4" />
+                       Download for Mac
+                     </Button>
+                     <Button onClick={() => window.open("https://drive.google.com/file/d/1gXCgv1DUd9nhEJvKRmvS0t_EmgOwZU25/view?usp=drive_link", "_blank")} variant="outline" className="flex items-center gap-2">
+                       <Laptop className="h-4 w-4" />
+                       Download for Linux
+                     </Button>
+                   </div>
           <div className="space-y-6">
             <div>
               <h1 className="mt-8 text-2xl font-bold leading-9 tracking-tight">Create your account</h1>

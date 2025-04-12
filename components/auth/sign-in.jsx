@@ -86,6 +86,10 @@ export default function SignIn() {
               <Laptop className="h-4 w-4" />
               Download for Windows
             </Button>
+            <Button onClick={() => window.open("https://drive.google.com/file/d/1gXCgv1DUd9nhEJvKRmvS0t_EmgOwZU25/view?usp=drive_link", "_blank")} variant="outline" className="flex items-center gap-2">
+              <Laptop className="h-4 w-4" />
+              Download for Linux
+            </Button>
             <Button onClick={() => window.open("https://drive.google.com/file/d/1yDbGE5qGcBIDqhZM1Ugg8LBPpRVpS0H8/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
               <Apple className="h-4 w-4" />
               Download for Mac
