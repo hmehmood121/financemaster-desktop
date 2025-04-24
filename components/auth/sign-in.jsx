@@ -185,6 +185,7 @@ export default function SignIn() {
           alt="Finance"
           width={1920}
           height={1080}
+         style={{objectFit:'contain'}}
           priority
         />
       </div>
