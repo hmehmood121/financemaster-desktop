@@ -238,7 +238,7 @@ export default function SignUp() {
           alt="Finance"
           width={1920}
           height={1080}
-          style={{objectFit:'contain'}}
+         style={{objectFit:'contain'}}
           priority
         />
       </div>

@@ -186,7 +186,7 @@ export default function SignIn() {
           width={1920}
           height={1080}
          style={{objectFit:'contain'}}
-          priority
+        priority
         />
       </div>
     </div>
