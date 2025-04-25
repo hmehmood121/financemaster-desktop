@@ -92,7 +92,7 @@ export default function SignIn() {
             </Button>
             <Button onClick={() => window.open("https://drive.google.com/file/d/1yDbGE5qGcBIDqhZM1Ugg8LBPpRVpS0H8/view?usp=sharing", "_blank")} variant="outline" className="flex items-center gap-2">
               <Apple className="h-4 w-4" />
-              Download for Macc
+              Download for Mac
             </Button>
           </div>
           <div className="space-y-6">
