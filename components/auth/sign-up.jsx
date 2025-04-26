@@ -213,7 +213,7 @@ export default function SignUp() {
                 />
               </div>
               <div>
-                <Label htmlFor="youtube">YouTube Channel Link</Label>
+                <Label htmlFor="youtube">YouTube Channel Linkk</Label>
                 <Input
                   id="youtube"
                   type="url"
