@@ -233,12 +233,12 @@ export default function SignUp() {
       </div>
       <div className="relative hidden w-0 flex-1 lg:block">
         <Image
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full"
           src="/billy.jpg"
           alt="Finance"
           width={1920}
           height={1080}
-         style={{objectFit:'contain'}}
+          style={{objectFit:'contain'}}
           priority
         />
       </div>
