@@ -181,7 +181,7 @@ export default function SignIn() {
       <div className="relative hidden w-0 flex-1 lg:block">
         <Image
           className="absolute inset-0 h-full w-full object-cover"
-          src="/billy.jpg"
+          src="/1.webp"
           alt="Finance"
           width={1920}
           height={1080}
